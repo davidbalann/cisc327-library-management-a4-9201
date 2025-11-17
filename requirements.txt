@@ -1,0 +1,8 @@
+Flask==2.3.3
+pytest==7.4.2
+pytest-mock==3.12.0
+requests
+coverage
+pytest-cov
+playwright
+docker

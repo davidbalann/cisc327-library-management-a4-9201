@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+*.pyc
+.git/
+.idea/
+*.coverage
+coverage.xml
+junit.xml
+banner.png
