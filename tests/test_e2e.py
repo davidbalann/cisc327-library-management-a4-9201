@@ -6,6 +6,7 @@ import subprocess
 import time
 import requests
 import sys
+import platform
 
 import pytest
 from playwright.sync_api import sync_playwright, expect
@@ -22,6 +23,10 @@ else:
 def wait_for_server(url, timeout=10):
     time.sleep(timeout)
 
+SKIP_E2E_ON_MAC_CI = (
+    platform.system() == "Darwin"
+    and os.getenv("CI", "").lower() == "true"
+)
 
 
 @pytest.fixture(scope="session")
@@ -95,7 +100,7 @@ def add_test_book(page, title, author, isbn=None, total_copies="3"):
 
 
 # ---------- Test 1: Add + Borrow flow ----------
-
+@pytest.mark.skipif(SKIP_E2E_ON_MAC_CI, reason="Skip Playwright E2E on macOS CI")
 def test_add_and_borrow_book_flow(page):
     """
     i.   Add a new book to the catalog
@@ -137,7 +142,7 @@ def test_add_and_borrow_book_flow(page):
 
 
 # ---------- Test 2: Search flow (example) ----------
-
+@pytest.mark.skipif(SKIP_E2E_ON_MAC_CI, reason="Skip Playwright E2E on macOS CI")
 def test_search_catalog_flow(page):
     """
     Second realistic user flow:
