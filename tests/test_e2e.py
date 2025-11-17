@@ -20,48 +20,32 @@ else:
 
 # ---------- Fixtures ----------
 def wait_for_server(url, timeout=10):
-    start = time.time()
-    while time.time() - start < timeout:
-        try:
-            requests.get(url)
-            return
-        except Exception:
-            time.sleep(0.5)
-    raise RuntimeError("Flask server did not start in time")
+    time.sleep(timeout)
+
 
 
 @pytest.fixture(scope="session")
 def flask_server():
-    """
-    Start the Flask app in a separate process for the duration of the test session.
-    Assumes `app.py` runs the server when executed directly.
-    """
     env = os.environ.copy()
     env["FLASK_ENV"] = "testing"
 
-    # Use the same Python interpreter that is running pytest (matrix version)
     proc = subprocess.Popen(
         [sys.executable, "app.py"],
         env=env,
     )
 
     try:
-        # Give mac runners a bit more time to start up
-        wait_for_server(BASE_URL, timeout=30)
+        wait_for_server(BASE_URL, timeout=10)
     except Exception:
-        # If startup fails, make sure we don't leave a stray process running
         if proc.poll() is None:
             if os.name == "nt":
                 proc.terminate()
             else:
                 os.kill(proc.pid, signal.SIGTERM)
-        # Surface the failure to pytest
         raise
 
-    # If we get here, server is up
     yield
 
-    # Tear down
     if proc.poll() is None:
         if os.name == "nt":
             proc.terminate()
