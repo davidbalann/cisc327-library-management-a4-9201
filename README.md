@@ -1,5 +1,5 @@
 # Library Management System - Flask Web Application with SQLite
-[![Tests](https://img.shields.io/github/actions/workflow/status/davidbalann/cisc327-library-management-a2-9201/main.yml?branch=main&label=Tests)](https://github.com/davidbalann/cisc327-library-management-a2-9201/actions/workflows/main.yml) [![codecov](https://codecov.io/gh/davidbalann/cisc327-library-management-a3-9201/branch/main/graph/badge.svg?token=vo2w8e24Bc)](https://codecov.io/gh/davidbalann/cisc327-library-management-a3-9201)
+[![Tests](https://img.shields.io/github/actions/workflow/status/davidbalann/cisc327-library-management-a4-9201/main.yml?branch=main&label=Tests)](https://github.com/davidbalann/cisc327-library-management-a4-9201/actions/workflows/main.yml) [![codecov](https://codecov.io/gh/davidbalann/cisc327-library-management-a4-9201/branch/main/graph/badge.svg?token=vo2w8e24Bc)](https://codecov.io/gh/davidbalann/cisc327-library-management-a4-9201)
 
 Simplified library app used for CISC 327 Software Quality Assurance coursework. Includes a Flask web UI, SQLite persistence, and a test suite focused on business logic and routes.
 
