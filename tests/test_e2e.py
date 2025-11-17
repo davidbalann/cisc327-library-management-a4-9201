@@ -11,7 +11,11 @@ from playwright.sync_api import sync_playwright, expect
 
 BASE_URL = "http://127.0.0.1:5000"  # change if your app runs on another port
 
-headless_bool = False
+# Run headed locally, headless on CI
+if os.getenv("CI", "").lower() == "true" or os.getenv("GITHUB_ACTIONS", "").lower() == "true":
+    headless_bool = True
+else:
+    headless_bool = False  # keep nice headed browser when you run tests locally
 
 # ---------- Fixtures ----------
 def wait_for_server(url, timeout=10):
