@@ -5,6 +5,7 @@ import signal
 import subprocess
 import time
 import requests
+import sys
 
 import pytest
 from playwright.sync_api import sync_playwright, expect
@@ -38,14 +39,14 @@ def flask_server():
     env = os.environ.copy()
     env["FLASK_ENV"] = "testing"
 
-    # Don't pipe stdout/stderr – let logs go to the CI console so we can see crashes.
+    # Use the same Python interpreter that is running pytest (matrix version)
     proc = subprocess.Popen(
-        ["python", "app.py"],
+        [sys.executable, "app.py"],
         env=env,
     )
 
     try:
-        # Give mac runners more time to start up
+        # Give mac runners a bit more time to start up
         wait_for_server(BASE_URL, timeout=30)
     except Exception:
         # If startup fails, make sure we don't leave a stray process running
@@ -54,6 +55,7 @@ def flask_server():
                 proc.terminate()
             else:
                 os.kill(proc.pid, signal.SIGTERM)
+        # Surface the failure to pytest
         raise
 
     # If we get here, server is up
@@ -69,6 +71,7 @@ def flask_server():
             proc.wait(timeout=5)
         except subprocess.TimeoutExpired:
             proc.kill()
+
 
 
 @pytest.fixture
