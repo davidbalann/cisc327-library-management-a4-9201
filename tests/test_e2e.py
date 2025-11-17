@@ -38,17 +38,25 @@ def flask_server():
     env = os.environ.copy()
     env["FLASK_ENV"] = "testing"
 
-    # Start the app: adjust command if you use `flask run` or a different entrypoint
+    # Don't pipe stdout/stderr – let logs go to the CI console so we can see crashes.
     proc = subprocess.Popen(
         ["python", "app.py"],
         env=env,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
     )
-    wait_for_server(BASE_URL)
 
+    try:
+        # Give mac runners more time to start up
+        wait_for_server(BASE_URL, timeout=30)
+    except Exception:
+        # If startup fails, make sure we don't leave a stray process running
+        if proc.poll() is None:
+            if os.name == "nt":
+                proc.terminate()
+            else:
+                os.kill(proc.pid, signal.SIGTERM)
+        raise
 
-
+    # If we get here, server is up
     yield
 
     # Tear down
